@@ -1,6 +1,8 @@
 import pandas as pd
 import boto3
 
+from decimal import Decimal
+
 
 REGION_NAME = 'us-east-1'
 DYNAMO_TABLE = 'poc-artist'
@@ -18,6 +20,18 @@ def read_csv(file_obj, header_list):
     file_df = pd.read_csv(file_obj)
     file_df.columns = header_list
     return file_df
+
+
+def float_to_decimal(num):
+    return Decimal(str(num))
+
+
+def fix_float_2_decimal(df):
+    for i in df.columns:
+        datatype = df[i].dtype
+        if datatype == 'float64':
+            df[i] = df[i].apply(float_to_decimal)
+    return df
 
 
 def batch_load_dynamo(dataframe):
@@ -93,5 +107,7 @@ if __name__ == '__main__':
 
     artist_master_df = pd.merge(artist_summary_df, artist_details_df, how='inner', on='PK')
     print(artist_master_df.head())
+
+    artist_master_df = fix_float_2_decimal(artist_master_df)
 
     batch_load_dynamo(artist_master_df)
