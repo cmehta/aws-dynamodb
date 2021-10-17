@@ -10,9 +10,8 @@ def read_4m_s3(AWS_S3_BUCKET, file):
 
 
 def read_csv(file_obj, headerList):
-    file = pd.read_csv(file_obj)
-    file.to_csv(file_obj, header=headerList, index=False)
     file_df = pd.read_csv(file_obj)
+    file_df.columns = headerList
     return file_df
 
 
