@@ -16,10 +16,6 @@ def read_csv(file_obj, headerList):
     return file_df
 
 
-def load_2_dynamo(df, table):
-    wr.dynamodb.put_df(df=df, table_name=table)
-
-
 if __name__ == '__main__':
     DYNAMO_TABLE='poc-artist'
     AWS_S3_BUCKET='database-poc-extracts-east1'
@@ -60,4 +56,4 @@ if __name__ == '__main__':
     artist_master_df = pd.merge(artist_summary_df, artist_details_df, how='inner', on='PK')
     print(artist_master_df.head())
 
-    load_2_dynamo(artist_master_df, DYNAMO_TABLE)
+    wr.dynamodb.put_df(df=artist_master_df, table_name=DYNAMO_TABLE)
