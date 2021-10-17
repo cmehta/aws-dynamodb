@@ -2,9 +2,14 @@ import pandas as pd
 import boto3
 
 
-def read_4m_s3(aws_s3_bucket, file):
+REGION_NAME = 'us-east-1'
+DYNAMO_TABLE = 'poc-artist'
+AWS_S3_BUCKET = 'database-poc-extracts-east1'
+
+
+def read_4m_s3(file):
     s3_client = boto3.client('s3')
-    response = s3_client.get_object(Bucket=aws_s3_bucket, Key=file)
+    response = s3_client.get_object(Bucket=AWS_S3_BUCKET, Key=file)
     status = response.get("ResponseMetadata", {}).get("HTTPStatusCode")
     return response, status
 
@@ -15,9 +20,9 @@ def read_csv(file_obj, header_list):
     return file_df
 
 
-def batch_load_dynamo(table_name, dataframe):
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table(table_name)
+def batch_load_dynamo(dataframe):
+    dynamodb = boto3.resource('dynamodb', region_name=REGION_NAME)
+    table = dynamodb.Table(DYNAMO_TABLE)
     with table.batch_writer() as batch:
         for index, row in dataframe.iterrows():
             content = {'ArtistSummaryId': row['ArtistSummaryId'], 'RoySys': row['RoySys_x'],
@@ -52,8 +57,6 @@ def batch_load_dynamo(table_name, dataframe):
 
 
 if __name__ == '__main__':
-    DYNAMO_TABLE = 'poc-artist'
-    AWS_S3_BUCKET = 'database-poc-extracts-east1'
     artist_summary_headerList = ['ArtistSummaryId', 'RoySys', 'Acct_No', 'Acct_Qtr', 'Seq_no', 'Payee_No', 'Owner_name',
                                  'Account_Name', 'Vendor_No', 'Acct_Status', 'Acct_Payee_Status', 'Payee_Status',
                                  'Opening_Bal', 'Prior_Resv', 'Total_Resv', 'Total_Payments', 'Total_Adjustments',
@@ -69,14 +72,14 @@ if __name__ == '__main__':
                                  'Eff_rate', 'Tax_rate', 'Net_roy_earn', 'Active', 'ASL', 'DSP Name', 'Units',
                                  'Receipts']
 
-    artist_summary_obj, status = read_4m_s3(AWS_S3_BUCKET, 'artist_summary.csv')
+    artist_summary_obj, status = read_4m_s3('artist_summary.csv')
     if status == 200:
         print("Successful S3 get_object response for artist summary. Status - {}".format(status))
         artist_summary_df = read_csv(artist_summary_obj.get("Body"), artist_summary_headerList)
     else:
         print("Unsuccessful S3 get_object response for artist summary. Status - {}".format(status))
 
-    artist_details_obj, status = read_4m_s3(AWS_S3_BUCKET, 'artist_details.csv')
+    artist_details_obj, status = read_4m_s3('artist_details.csv')
     if status == 200:
         print("Successful S3 get_object response for artist details. Status - {}".format(status))
         artist_details_df = read_csv(artist_details_obj.get("Body"), artist_details_headerList)
@@ -91,4 +94,4 @@ if __name__ == '__main__':
     artist_master_df = pd.merge(artist_summary_df, artist_details_df, how='inner', on='PK')
     print(artist_master_df.head())
 
-    batch_load_dynamo(DYNAMO_TABLE, artist_master_df)
+    batch_load_dynamo(artist_master_df)
