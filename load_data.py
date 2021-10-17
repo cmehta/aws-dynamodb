@@ -1,10 +1,11 @@
 import pandas as pd
 import boto3
+import awswrangler as wr
 
 
-def read_4m_s3(AWS_S3_BUCKET, file):
+def read_4m_s3(aws_s3_bucket, file):
     s3_client = boto3.client('s3')
-    response = s3_client.get_object(Bucket=AWS_S3_BUCKET, Key=file)
+    response = s3_client.get_object(Bucket=aws_s3_bucket, Key=file)
     status = response.get("ResponseMetadata", {}).get("HTTPStatusCode")
     return response, status
 
@@ -15,11 +16,12 @@ def read_csv(file_obj, headerList):
     return file_df
 
 
-def load_2_dynamo():
-    pass
+def load_2_dynamo(df, table):
+    wr.dynamodb.put_df(df=df, table_name=table)
 
 
 if __name__ == '__main__':
+    DYNAMO_TABLE='poc-artist'
     AWS_S3_BUCKET='database-poc-extracts-east1'
     artist_summary_headerList = ['ArtistSummaryId', 'RoySys', 'Acct_No', 'Acct_Qtr', 'Seq_no', 'Payee_No', 'Owner_name',
                                  'Account_Name', 'Vendor_No', 'Acct_Status', 'Acct_Payee_Status', 'Payee_Status',
@@ -57,3 +59,5 @@ if __name__ == '__main__':
 
     artist_master_df = pd.merge(artist_summary_df, artist_details_df, how='inner', on='PK')
     print(artist_master_df.head())
+
+    load_2_dynamo(artist_master_df, DYNAMO_TABLE)
