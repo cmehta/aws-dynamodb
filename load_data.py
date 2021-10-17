@@ -40,12 +40,14 @@ def fix_float_2_decimal(df):
 def batch_load_dynamo(dataframe):
     dynamodb = boto3.resource('dynamodb', region_name=REGION_NAME)
     table = dynamodb.Table(DYNAMO_TABLE)
-    logger.info("Connected to the table - %s.", table.name)
+    # logger.info("Connected to the table - %s.", table.name)
+    print("Connected to the table - {}.".format(table.name))
     try:
         with table.batch_writer() as batch:
             for index, row in dataframe.iterrows():
                 if index%1000==0:
-                    logger.info("written index - %d.", index)
+                    # logger.info("written index - %d.", index)
+                    print("written index - {}.".format(index))
                 content = {'ArtistSummaryId': row['ArtistSummaryId'], 'RoySys': row['RoySys_x'],
                            'Acct_No': row['Acct_No_x'], 'Acct_Qtr_x': row['Acct_Qtr_x'], 'Seq_no': row['Seq_no'],
                            'Payee_No': row['Payee_No_x'], 'Owner_name': row['Owner_name'],
@@ -76,7 +78,8 @@ def batch_load_dynamo(dataframe):
                            'DSP Name': row['DSP Name'], 'Units': row['Units'], 'Receipts': row['Receipts']}
                 batch.put_item(Item=content)
     except ClientError:
-        logger.exception("Couldn't load data into table %s.", table.name)
+        print("Couldn't load data into table {}.".format(table.name))
+        # logger.exception("Couldn't load data into table %s.", table.name)
         raise
 
 
@@ -98,17 +101,21 @@ if __name__ == '__main__':
 
     artist_summary_obj, status = read_4m_s3('artist_summary.csv')
     if status == 200:
-        logger.info("Successful S3 get_object response for artist summary. Status - %s.", status)
+        # logger.info("Successful S3 get_object response for artist summary. Status - %s.", status)
+        print("Successful S3 get_object response for artist summary. Status - {}.".format(status))
         artist_summary_df = read_csv(artist_summary_obj.get("Body"), artist_summary_headerList)
     else:
-        logger.info("Unsuccessful S3 get_object response for artist summary. Status - %s.", status)
+        # logger.info("Unsuccessful S3 get_object response for artist summary. Status - %s.", status)
+        print("Unsuccessful S3 get_object response for artist summary. Status - {}.".format(status))
 
     artist_details_obj, status = read_4m_s3('artist_details.csv')
     if status == 200:
-        logger.info("Successful S3 get_object response for artist details. Status - %s.", status)
+        # logger.info("Successful S3 get_object response for artist details. Status - %s.", status)
+        print("Successful S3 get_object response for artist details. Status - {}.".format(status))
         artist_details_df = read_csv(artist_details_obj.get("Body"), artist_details_headerList)
     else:
-        logger.info("Unsuccessful S3 get_object response for artist details. Status - %s.", status)
+        # logger.info("Unsuccessful S3 get_object response for artist details. Status - %s.", status)
+        print("Unsuccessful S3 get_object response for artist details. Status - {}.".format(status))
 
     artist_summary_df['PK'] = artist_summary_df.RoySys.astype(str) + artist_summary_df.Acct_No.astype(
         str) + artist_summary_df.Acct_Qtr.astype(str) + artist_summary_df.Payee_No.astype(str)
@@ -119,6 +126,7 @@ if __name__ == '__main__':
     print(artist_master_df.head())
 
     artist_master_df = fix_float_2_decimal(artist_master_df)
-    logger.info("Converted float to Decimal.")
+    # logger.info("Converted float to Decimal.")
+    print("Converted float to Decimal.")
 
     batch_load_dynamo(artist_master_df)
