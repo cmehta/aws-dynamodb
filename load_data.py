@@ -56,4 +56,4 @@ if __name__ == '__main__':
     artist_master_df = pd.merge(artist_summary_df, artist_details_df, how='inner', on='PK')
     print(artist_master_df.head())
 
-    wr.dynamodb.put_df(df=artist_master_df, table_name=DYNAMO_TABLE)
+    wr.dynamodb.put_df(df=artist_master_df, table_name=DYNAMO_TABLE, boto3_session=boto3.Session())
