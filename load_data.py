@@ -74,8 +74,11 @@ def batch_load_dynamo(dataframe):
             for index, row in dataframe.iterrows():
                 print(row)
                 print('----------------------------------')
+                if index%1000==0:
+                    # logger.info("written index - %d.", index)
+                    print("written index - {}.".format(index))
                 content = {'artistsummaryid': row['artistsummaryid'], 'roysys': row['roysys_x'],
-                           'acct_no': row['acct_no_x'], 'acct_qtr_x': row['acct_qtr_x'], 'seq_no': row['seq_no'],
+                           'acct_no': row['acct_no_x'], 'acct_qtr_x': row['acct_qtr_x'], 'seq_no': row['seq_no_x'],
                            'payee_no': row['payee_no_x'], 'owner_name': row['owner_name'],
                            'account_name': row['account_name'], 'vendor_no': row['vendor_no_x'],
                            'acct_status': row['acct_status'], 'acct_payee_status': row['acct_payee_status'],
@@ -87,20 +90,21 @@ def batch_load_dynamo(dataframe):
                            'total_earn': row['total_earn'], 'total_transfers': row['total_transfers'],
                            'ending_bal': row['ending_bal'], 'pcd': row['pcd'], 'a_prior_resv': row['a_prior_resv'],
                            'a_total_resv': row['a_total_resv'], 'a_dom_earnings': row['a_dom_earnings'],
-                           'a_club_earnings': row['a_club_earnings'], 'a_3rd_party_earnings': row['a_3rd_party_earnings'],
+                           'a_club_earnings': row['a_club_earnings'],
+                           'a_3rd_party_earnings': row['a_3rd_party_earnings'],
                            'a_foreign_earnings': row['a_foreign_earnings'], 'payee_name': row['payee_name'],
                            'address_1': row['address_1'], 'address_2': row['address_2'], 'address_3': row['address_3'],
                            'address_4': row['address_4'], 'payee_pct': row['payee_pct'],
                            'a_total_earn': row['a_total_earn'], 'active_x': row['active_x'], 'asl_x': row['asl_x'],
                            'nonaccrued': row['nonaccrued'], 'total_miscearnings': row['total_miscearnings'],
                            'a_total_miscearnings': row['a_total_miscearnings'], 'isarchived': row['isarchived'],
-                           'pk': row['pk'], 'artistdetailid': row['artistdetailid'], 'seq_no': row['seq_no'],
-                           'group_no': row['group_no'], 'source': row['source'], 'title': row['title'],
-                           'sales type': row['sales type'], 'price level': row['price level'],
-                           'sales date': row['sales date'], 'selection': row['selection'], 'config': row['config'],
-                           'contract': row['contract'], 'pr_code': row['pr_code'], 'price': row['price'],
-                           'pckg_rate': row['pckg_rate'], 'roy_rate': row['roy_rate'], 'part %': row['part %'],
-                           'eff_rate': row['eff_rate'], 'tax_rate': row['tax_rate'], 'net_roy_earn': row['net_roy_earn'],
+                           'pk': row['pk'], 'artistdetailid': row['artistdetailid'], 'group_no': row['group_no'],
+                           'source': row['source'], 'title': row['title'], 'sales type': row['sales type'],
+                           'price level': row['price level'], 'sales date': row['sales date'],
+                           'selection': row['selection'], 'config': row['config'], 'contract': row['contract'],
+                           'pr_code': row['pr_code'], 'price': row['price'], 'pckg_rate': row['pckg_rate'],
+                           'roy_rate': row['roy_rate'], 'part %': row['part %'], 'eff_rate': row['eff_rate'],
+                           'tax_rate': row['tax_rate'], 'net_roy_earn': row['net_roy_earn'],
                            'dsp name': row['dsp name'], 'units': row['units'], 'receipts': row['receipts']}
 
                 print(content)
@@ -111,9 +115,6 @@ def batch_load_dynamo(dataframe):
                 # print(converted_content)
 
                 batch.put_item(Item=content)
-                if index%1000==0:
-                    # logger.info("written index - %d.", index)
-                    print("written index - {}.".format(index))
     except ClientError:
         print("Couldn't load data into table {}.".format(table.name))
         # logger.exception("Couldn't load data into table %s.", table.name)
