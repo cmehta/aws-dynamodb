@@ -14,6 +14,15 @@ AWS_S3_BUCKET = 'database-poc-extracts-east1'
 logger = logging.getLogger(__name__)
 
 
+def to_str(val):
+    return str(val)
+
+
+def convert_dtype2_string(df):
+    for i in df.columns:
+        df[i] = df[i].apply(to_str)
+
+
 class DecimalEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, decimal.Decimal):
@@ -96,11 +105,11 @@ def batch_load_dynamo(dataframe):
                            'DSP Name': row['DSP Name'], 'Units': row['Units'], 'Receipts': row['Receipts']}
 
                 # Since Object of type Decimal is not JSON serializable, we are using below code to fix this issue.
-                dict_encoded_as_json_string = json.dumps(content, cls=DecimalEncoder)
-                converted_content = json.loads(dict_encoded_as_json_string, object_hook=as_Decimal)
-                print(converted_content)
+                # dict_encoded_as_json_string = json.dumps(content, cls=DecimalEncoder)
+                # converted_content = json.loads(dict_encoded_as_json_string, object_hook=as_Decimal)
+                # print(converted_content)
 
-                batch.put_item(Item=converted_content)
+                batch.put_item(Item=content)
     except ClientError:
         print("Couldn't load data into table {}.".format(table.name))
         # logger.exception("Couldn't load data into table %s.", table.name)
@@ -129,7 +138,7 @@ if __name__ == '__main__':
         print("Successful S3 get_object response for artist summary. Status - {}.".format(status))
         artist_summary_df = read_csv(artist_summary_obj.get("Body"), artist_summary_headerList)
         print('Fixing dtypes of artist summary')
-        fix_float_2_decimal(artist_summary_df)
+        convert_dtype2_string(artist_summary_df)
         print('Fixed dtypes of artist summary.')
     else:
         # logger.info("Unsuccessful S3 get_object response for artist summary. Status - %s.", status)
@@ -141,7 +150,7 @@ if __name__ == '__main__':
         print("Successful S3 get_object response for artist details. Status - {}.".format(status))
         artist_details_df = read_csv(artist_details_obj.get("Body"), artist_details_headerList)
         print('Fixing dtypes of artist details')
-        fix_float_2_decimal(artist_details_df)
+        convert_dtype2_string(artist_details_df)
         print('Fixed dtypes of artist details.')
     else:
         # logger.info("Unsuccessful S3 get_object response for artist details. Status - %s.", status)
