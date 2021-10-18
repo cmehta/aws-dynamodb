@@ -50,7 +50,7 @@ def fix_float_2_decimal(df):
     for i in df.columns:
         print('checking column {}'.format(i))
         datatype = df[i].dtype
-        if datatype == 'float64':
+        if datatype == 'float64' or datatype == 'int64':
             df[i] = df[i].apply(float_to_decimal)
             print('Types fixed for {}'.format(i))
 
