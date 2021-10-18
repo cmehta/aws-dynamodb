@@ -30,10 +30,13 @@ def float_to_decimal(num):
 
 
 def fix_float_2_decimal(df):
+    print('fixing types...')
     for i in df.columns:
+        print('checking column {}'.format(i))
         datatype = df[i].dtype
         if datatype == 'float64':
             df[i] = df[i].apply(float_to_decimal)
+    print('Types fixed.')
     return df
 
 
@@ -125,8 +128,8 @@ if __name__ == '__main__':
     artist_master_df = pd.merge(artist_summary_df, artist_details_df, how='inner', on='PK')
     print(artist_master_df.head())
 
-    artist_master_df = fix_float_2_decimal(artist_master_df)
+    artist_master_dtype_fixed_df = fix_float_2_decimal(artist_master_df)
     # logger.info("Converted float to Decimal.")
     print("Converted float to Decimal.")
 
-    batch_load_dynamo(artist_master_df)
+    batch_load_dynamo(artist_master_dtype_fixed_df)
