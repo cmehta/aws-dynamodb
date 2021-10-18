@@ -117,20 +117,20 @@ def batch_load_dynamo(dataframe):
 
 
 if __name__ == '__main__':
-    artist_summary_headerList = ['ArtistSummaryId', 'RoySys', 'Acct_No', 'Acct_Qtr', 'Seq_no', 'Payee_No', 'Owner_name',
-                                 'Account_Name', 'Vendor_No', 'Acct_Status', 'Acct_Payee_Status', 'Payee_Status',
-                                 'Opening_Bal', 'Prior_Resv', 'Total_Resv', 'Total_Payments', 'Total_Adjustments',
-                                 'Dom_Earnings', 'Club_Earnings', '3rd_Party_Earnings', 'Foreign_Earnings',
-                                 'Total_Earn', 'Total_Transfers', 'Ending_Bal', 'PCD', 'A_Prior_Resv', 'A_Total_Resv',
-                                 'A_Dom_Earnings', 'A_Club_Earnings', 'A_3rd_Party_Earnings', 'A_Foreign_Earnings',
-                                 'Payee_Name', 'Address_1', 'Address_2', 'Address_3', 'Address_4', 'Payee_Pct',
-                                 'A_Total_Earn', 'Active', 'ASL', 'NonAccrued', 'Total_MiscEarnings',
-                                 'A_Total_MiscEarnings', 'IsArchived']
-    artist_details_headerList = ['ArtistDetailId', 'RoySys', 'Acct_No', 'Acct_Qtr', 'Seq_No', 'Payee_No', 'Vendor_No',
-                                 'Group_No', 'Source', 'Title', 'Sales Type', 'Price Level', 'Sales Date', 'Selection',
-                                 'Config', 'Contract', 'Pr_Code', 'Price', 'Pckg_rate', 'Roy_Rate', 'Part %',
-                                 'Eff_rate', 'Tax_rate', 'Net_roy_earn', 'Active', 'ASL', 'DSP Name', 'Units',
-                                 'Receipts']
+    artist_summary_headerList = ['artistsummaryid', 'roysys', 'acct_no', 'acct_qtr', 'seq_no', 'payee_no', 'owner_name',
+                                 'account_name', 'vendor_no', 'acct_status', 'acct_payee_status', 'payee_status',
+                                 'opening_bal', 'prior_resv', 'total_resv', 'total_payments', 'total_adjustments',
+                                 'dom_earnings', 'club_earnings', '3rd_party_earnings', 'foreign_earnings',
+                                 'total_earn', 'total_transfers', 'ending_bal', 'pcd', 'a_prior_resv', 'a_total_resv',
+                                 'a_dom_earnings', 'a_club_earnings', 'a_3rd_party_earnings', 'a_foreign_earnings',
+                                 'payee_name', 'address_1', 'address_2', 'address_3', 'address_4', 'payee_pct',
+                                 'a_total_earn', 'active', 'asl', 'nonaccrued', 'total_miscearnings',
+                                 'a_total_miscearnings', 'isarchived']
+    artist_details_headerList = ['artistdetailid', 'roysys', 'acct_no', 'acct_qtr', 'seq_no', 'payee_no', 'vendor_no', 
+                                 'group_no', 'source', 'title', 'sales type', 'price level', 'sales date', 'selection',
+                                 'config', 'contract', 'pr_code', 'price', 'pckg_rate', 'roy_rate', 'part %',
+                                 'eff_rate', 'tax_rate', 'net_roy_earn', 'active', 'asl', 'dsp name', 'units',
+                                 'receipts']
 
     artist_summary_obj, status = read_4m_s3('artist_summary.csv')
     if status == 200:
