@@ -2,6 +2,7 @@ import pandas as pd
 import boto3
 import logging
 import json
+import decimal
 
 from decimal import Decimal
 from botocore.exceptions import ClientError
@@ -11,6 +12,20 @@ REGION_NAME = 'us-east-1'
 DYNAMO_TABLE = 'poc-artist'
 AWS_S3_BUCKET = 'database-poc-extracts-east1'
 logger = logging.getLogger(__name__)
+
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, decimal.Decimal):
+            return {'__Decimal__': str(obj)}
+        # Let the base class default method raise the TypeError
+        return json.JSONEncoder.default(self, obj)
+
+
+def as_Decimal(dct):
+    if '__Decimal__' in dct:
+        return decimal.Decimal(dct['__Decimal__'])
+    return dct
 
 
 def read_4m_s3(file):
@@ -79,7 +94,11 @@ def batch_load_dynamo(dataframe):
                            'Pckg_rate': row['Pckg_rate'], 'Roy_Rate': row['Roy_Rate'], 'Part %': row['Part %'],
                            'Eff_rate': row['Eff_rate'], 'Tax_rate': row['Tax_rate'], 'Net_roy_earn': row['Net_roy_earn'],
                            'DSP Name': row['DSP Name'], 'Units': row['Units'], 'Receipts': row['Receipts']}
-                converted_content = json.loads(json.dumps(content), parse_float=Decimal)
+
+                # Since Object of type Decimal is not JSON serializable, we are using below code to fix this issue.
+                dict_encoded_as_json_string = json.dumps(content, cls=DecimalEncoder)
+                converted_content = json.loads(dict_encoded_as_json_string, object_hook=as_Decimal)
+
                 batch.put_item(Item=converted_content)
     except ClientError:
         print("Couldn't load data into table {}.".format(table.name))
