@@ -72,9 +72,8 @@ def batch_load_dynamo(dataframe):
     try:
         with table.batch_writer() as batch:
             for index, row in dataframe.iterrows():
-                if index%1000==0:
-                    # logger.info("written index - %d.", index)
-                    print("written index - {}.".format(index))
+                print(row)
+                print('----------------------------------')
                 content = {'artistsummaryid': row['artistsummaryid'], 'roysys': row['roysys_x'],
                            'acct_no': row['acct_no_x'], 'acct_qtr_x': row['acct_qtr_x'], 'seq_no': row['seq_no'],
                            'payee_no': row['payee_no_x'], 'owner_name': row['owner_name'],
@@ -112,6 +111,9 @@ def batch_load_dynamo(dataframe):
                 # print(converted_content)
 
                 batch.put_item(Item=content)
+                if index%1000==0:
+                    # logger.info("written index - %d.", index)
+                    print("written index - {}.".format(index))
     except ClientError:
         print("Couldn't load data into table {}.".format(table.name))
         # logger.exception("Couldn't load data into table %s.", table.name)
