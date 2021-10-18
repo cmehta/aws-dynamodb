@@ -1,6 +1,7 @@
 import pandas as pd
 import boto3
 import logging
+import json
 
 from decimal import Decimal
 from botocore.exceptions import ClientError
@@ -78,7 +79,8 @@ def batch_load_dynamo(dataframe):
                            'Pckg_rate': row['Pckg_rate'], 'Roy_Rate': row['Roy_Rate'], 'Part %': row['Part %'],
                            'Eff_rate': row['Eff_rate'], 'Tax_rate': row['Tax_rate'], 'Net_roy_earn': row['Net_roy_earn'],
                            'DSP Name': row['DSP Name'], 'Units': row['Units'], 'Receipts': row['Receipts']}
-                batch.put_item(Item=content)
+                converted_content = json.loads(json.dumps(content), parse_float=Decimal)
+                batch.put_item(Item=converted_content)
     except ClientError:
         print("Couldn't load data into table {}.".format(table.name))
         # logger.exception("Couldn't load data into table %s.", table.name)
