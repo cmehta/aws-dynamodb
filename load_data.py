@@ -156,12 +156,12 @@ if __name__ == '__main__':
         # logger.info("Unsuccessful S3 get_object response for artist details. Status - %s.", status)
         print("Unsuccessful S3 get_object response for artist details. Status - {}.".format(status))
 
-    artist_summary_df['pk'] = artist_summary_df.RoySys.astype(str) + artist_summary_df.Acct_No.astype(
-        str) + artist_summary_df.Acct_Qtr.astype(str) + artist_summary_df.Payee_No.astype(str)
-    artist_details_df['pk'] = artist_details_df.RoySys.astype(str) + artist_details_df.Acct_No.astype(
-        str) + artist_details_df.Acct_Qtr.astype(str) + artist_details_df.Payee_No.astype(str)
+    artist_summary_df['pk'] = artist_summary_df.roysys + artist_summary_df.acct_no + artist_summary_df.acct_qtr\
+                              + artist_summary_df.payee_no
+    artist_details_df['pk'] = artist_details_df.roysys + artist_details_df.acct_no + artist_details_df.acct_qtr\
+                              + artist_details_df.payee_no
 
-    artist_master_df = pd.merge(artist_summary_df, artist_details_df, how='inner', on='PK')
+    artist_master_df = pd.merge(artist_summary_df, artist_details_df, how='inner', on='pk')
     print(artist_master_df.head())
     print(artist_master_df.dtypes)
 
