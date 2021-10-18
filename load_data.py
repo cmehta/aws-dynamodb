@@ -20,7 +20,7 @@ def read_4m_s3(file):
 
 
 def read_csv(file_obj, header_list):
-    file_df = pd.read_csv(file_obj)
+    file_df = pd.read_csv(file_obj, low_memory=False)
     file_df.columns = header_list
     return file_df
 
