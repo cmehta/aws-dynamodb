@@ -132,5 +132,6 @@ if __name__ == '__main__':
 
     artist_master_df = pd.merge(artist_summary_df, artist_details_df, how='inner', on='PK')
     print(artist_master_df.head())
+    print(artist_master_df.dtypes)
 
     batch_load_dynamo(artist_master_df)
