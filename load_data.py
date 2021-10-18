@@ -104,6 +104,8 @@ def batch_load_dynamo(dataframe):
                            'eff_rate': row['eff_rate'], 'tax_rate': row['tax_rate'], 'net_roy_earn': row['net_roy_earn'],
                            'dsp name': row['dsp name'], 'units': row['units'], 'receipts': row['receipts']}
 
+                print(content)
+
                 # Since Object of type Decimal is not JSON serializable, we are using below code to fix this issue.
                 # dict_encoded_as_json_string = json.dumps(content, cls=DecimalEncoder)
                 # converted_content = json.loads(dict_encoded_as_json_string, object_hook=as_Decimal)
