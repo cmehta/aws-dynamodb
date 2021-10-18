@@ -36,8 +36,7 @@ def fix_float_2_decimal(df):
         datatype = df[i].dtype
         if datatype == 'float64':
             df[i] = df[i].apply(float_to_decimal)
-    print('Types fixed.')
-    return df
+            print('Types fixed for {}'.format(i))
 
 
 def batch_load_dynamo(dataframe):
@@ -107,6 +106,9 @@ if __name__ == '__main__':
         # logger.info("Successful S3 get_object response for artist summary. Status - %s.", status)
         print("Successful S3 get_object response for artist summary. Status - {}.".format(status))
         artist_summary_df = read_csv(artist_summary_obj.get("Body"), artist_summary_headerList)
+        print('Fixing dtypes of artist summary')
+        fix_float_2_decimal(artist_summary_df)
+        print('Fixed dtypes of artist summary.')
     else:
         # logger.info("Unsuccessful S3 get_object response for artist summary. Status - %s.", status)
         print("Unsuccessful S3 get_object response for artist summary. Status - {}.".format(status))
@@ -116,6 +118,9 @@ if __name__ == '__main__':
         # logger.info("Successful S3 get_object response for artist details. Status - %s.", status)
         print("Successful S3 get_object response for artist details. Status - {}.".format(status))
         artist_details_df = read_csv(artist_details_obj.get("Body"), artist_details_headerList)
+        print('Fixing dtypes of artist details')
+        fix_float_2_decimal(artist_details_df)
+        print('Fixed dtypes of artist details.')
     else:
         # logger.info("Unsuccessful S3 get_object response for artist details. Status - %s.", status)
         print("Unsuccessful S3 get_object response for artist details. Status - {}.".format(status))
@@ -128,8 +133,4 @@ if __name__ == '__main__':
     artist_master_df = pd.merge(artist_summary_df, artist_details_df, how='inner', on='PK')
     print(artist_master_df.head())
 
-    artist_master_dtype_fixed_df = fix_float_2_decimal(artist_master_df)
-    # logger.info("Converted float to Decimal.")
-    print("Converted float to Decimal.")
-
-    batch_load_dynamo(artist_master_dtype_fixed_df)
+    batch_load_dynamo(artist_master_df)
