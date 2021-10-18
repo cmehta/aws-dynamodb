@@ -75,34 +75,34 @@ def batch_load_dynamo(dataframe):
                 if index%1000==0:
                     # logger.info("written index - %d.", index)
                     print("written index - {}.".format(index))
-                content = {'ArtistSummaryId': row['ArtistSummaryId'], 'RoySys': row['RoySys_x'],
-                           'Acct_No': row['Acct_No_x'], 'Acct_Qtr_x': row['Acct_Qtr_x'], 'Seq_no': row['Seq_no'],
-                           'Payee_No': row['Payee_No_x'], 'Owner_name': row['Owner_name'],
-                           'Account_Name': row['Account_Name'], 'Vendor_No': row['Vendor_No_x'],
-                           'Acct_Status': row['Acct_Status'], 'Acct_Payee_Status': row['Acct_Payee_Status'],
-                           'Payee_Status': row['Payee_Status'], 'Opening_Bal': row['Opening_Bal'],
-                           'Prior_Resv': row['Prior_Resv'], 'Total_Resv': row['Total_Resv'],
-                           'Total_Payments': row['Total_Payments'], 'Total_Adjustments': row['Total_Adjustments'],
-                           'Dom_Earnings': row['Dom_Earnings'], 'Club_Earnings': row['Club_Earnings'],
-                           '3rd_Party_Earnings': row['3rd_Party_Earnings'], 'Foreign_Earnings': row['Foreign_Earnings'],
-                           'Total_Earn': row['Total_Earn'], 'Total_Transfers': row['Total_Transfers'],
-                           'Ending_Bal': row['Ending_Bal'], 'PCD': row['PCD'], 'A_Prior_Resv': row['A_Prior_Resv'],
-                           'A_Total_Resv': row['A_Total_Resv'], 'A_Dom_Earnings': row['A_Dom_Earnings'],
-                           'A_Club_Earnings': row['A_Club_Earnings'], 'A_3rd_Party_Earnings': row['A_3rd_Party_Earnings'],
-                           'A_Foreign_Earnings': row['A_Foreign_Earnings'], 'Payee_Name': row['Payee_Name'],
-                           'Address_1': row['Address_1'], 'Address_2': row['Address_2'], 'Address_3': row['Address_3'],
-                           'Address_4': row['Address_4'], 'Payee_Pct': row['Payee_Pct'],
-                           'A_Total_Earn': row['A_Total_Earn'], 'Active_x': row['Active_x'], 'ASL_x': row['ASL_x'],
-                           'NonAccrued': row['NonAccrued'], 'Total_MiscEarnings': row['Total_MiscEarnings'],
-                           'A_Total_MiscEarnings': row['A_Total_MiscEarnings'], 'IsArchived': row['IsArchived'],
-                           'PK': row['PK'], 'ArtistDetailId': row['ArtistDetailId'], 'Seq_No': row['Seq_No'],
-                           'Group_No': row['Group_No'], 'Source': row['Source'], 'Title': row['Title'],
-                           'Sales Type': row['Sales Type'], 'Price Level': row['Price Level'],
-                           'Sales Date': row['Sales Date'], 'Selection': row['Selection'], 'Config': row['Config'],
-                           'Contract': row['Contract'], 'Pr_Code': row['Pr_Code'], 'Price': row['Price'],
-                           'Pckg_rate': row['Pckg_rate'], 'Roy_Rate': row['Roy_Rate'], 'Part %': row['Part %'],
-                           'Eff_rate': row['Eff_rate'], 'Tax_rate': row['Tax_rate'], 'Net_roy_earn': row['Net_roy_earn'],
-                           'DSP Name': row['DSP Name'], 'Units': row['Units'], 'Receipts': row['Receipts']}
+                content = {'artistsummaryid': row['artistsummaryid'], 'roysys': row['roysys_x'],
+                           'acct_no': row['acct_no_x'], 'acct_qtr_x': row['acct_qtr_x'], 'seq_no': row['seq_no'],
+                           'payee_no': row['payee_no_x'], 'owner_name': row['owner_name'],
+                           'account_name': row['account_name'], 'vendor_no': row['vendor_no_x'],
+                           'acct_status': row['acct_status'], 'acct_payee_status': row['acct_payee_status'],
+                           'payee_status': row['payee_status'], 'opening_bal': row['opening_bal'],
+                           'prior_resv': row['prior_resv'], 'total_resv': row['total_resv'],
+                           'total_payments': row['total_payments'], 'total_adjustments': row['total_adjustments'],
+                           'dom_earnings': row['dom_earnings'], 'club_earnings': row['club_earnings'],
+                           '3rd_party_earnings': row['3rd_party_earnings'], 'foreign_earnings': row['foreign_earnings'],
+                           'total_earn': row['total_earn'], 'total_transfers': row['total_transfers'],
+                           'ending_bal': row['ending_bal'], 'pcd': row['pcd'], 'a_prior_resv': row['a_prior_resv'],
+                           'a_total_resv': row['a_total_resv'], 'a_dom_earnings': row['a_dom_earnings'],
+                           'a_club_earnings': row['a_club_earnings'], 'a_3rd_party_earnings': row['a_3rd_party_earnings'],
+                           'a_foreign_earnings': row['a_foreign_earnings'], 'payee_name': row['payee_name'],
+                           'address_1': row['address_1'], 'address_2': row['address_2'], 'address_3': row['address_3'],
+                           'address_4': row['address_4'], 'payee_pct': row['payee_pct'],
+                           'a_total_earn': row['a_total_earn'], 'active_x': row['active_x'], 'asl_x': row['asl_x'],
+                           'nonaccrued': row['nonaccrued'], 'total_miscearnings': row['total_miscearnings'],
+                           'a_total_miscearnings': row['a_total_miscearnings'], 'isarchived': row['isarchived'],
+                           'pk': row['pk'], 'artistdetailid': row['artistdetailid'], 'seq_no': row['seq_no'],
+                           'group_no': row['group_no'], 'source': row['source'], 'title': row['title'],
+                           'sales type': row['sales type'], 'price level': row['price level'],
+                           'sales date': row['sales date'], 'selection': row['selection'], 'config': row['config'],
+                           'contract': row['contract'], 'pr_code': row['pr_code'], 'price': row['price'],
+                           'pckg_rate': row['pckg_rate'], 'roy_rate': row['roy_rate'], 'part %': row['part %'],
+                           'eff_rate': row['eff_rate'], 'tax_rate': row['tax_rate'], 'net_roy_earn': row['net_roy_earn'],
+                           'dsp name': row['dsp name'], 'units': row['units'], 'receipts': row['receipts']}
 
                 # Since Object of type Decimal is not JSON serializable, we are using below code to fix this issue.
                 # dict_encoded_as_json_string = json.dumps(content, cls=DecimalEncoder)
@@ -126,7 +126,7 @@ if __name__ == '__main__':
                                  'payee_name', 'address_1', 'address_2', 'address_3', 'address_4', 'payee_pct',
                                  'a_total_earn', 'active', 'asl', 'nonaccrued', 'total_miscearnings',
                                  'a_total_miscearnings', 'isarchived']
-    artist_details_headerList = ['artistdetailid', 'roysys', 'acct_no', 'acct_qtr', 'seq_no', 'payee_no', 'vendor_no', 
+    artist_details_headerList = ['artistdetailid', 'roysys', 'acct_no', 'acct_qtr', 'seq_no', 'payee_no', 'vendor_no',
                                  'group_no', 'source', 'title', 'sales type', 'price level', 'sales date', 'selection',
                                  'config', 'contract', 'pr_code', 'price', 'pckg_rate', 'roy_rate', 'part %',
                                  'eff_rate', 'tax_rate', 'net_roy_earn', 'active', 'asl', 'dsp name', 'units',
@@ -156,9 +156,9 @@ if __name__ == '__main__':
         # logger.info("Unsuccessful S3 get_object response for artist details. Status - %s.", status)
         print("Unsuccessful S3 get_object response for artist details. Status - {}.".format(status))
 
-    artist_summary_df['PK'] = artist_summary_df.RoySys.astype(str) + artist_summary_df.Acct_No.astype(
+    artist_summary_df['pk'] = artist_summary_df.RoySys.astype(str) + artist_summary_df.Acct_No.astype(
         str) + artist_summary_df.Acct_Qtr.astype(str) + artist_summary_df.Payee_No.astype(str)
-    artist_details_df['PK'] = artist_details_df.RoySys.astype(str) + artist_details_df.Acct_No.astype(
+    artist_details_df['pk'] = artist_details_df.RoySys.astype(str) + artist_details_df.Acct_No.astype(
         str) + artist_details_df.Acct_Qtr.astype(str) + artist_details_df.Payee_No.astype(str)
 
     artist_master_df = pd.merge(artist_summary_df, artist_details_df, how='inner', on='PK')
