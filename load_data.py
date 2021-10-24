@@ -150,6 +150,7 @@ if __name__ == '__main__':
         # logger.info("Successful S3 get_object response for artist summary. Status - %s.", status)
         print("Successful S3 get_object response for artist summary. Status - {}.".format(status))
         artist_summary_df = read_csv(artist_summary_obj.get("Body"), artist_summary_headerList)
+        print(set(artist_summary_df.PK))
         print('Fixing dtypes of artist summary')
         convert_dtype2_string(artist_summary_df)
         print('Fixed dtypes of artist summary.')
@@ -162,6 +163,7 @@ if __name__ == '__main__':
         # logger.info("Successful S3 get_object response for artist details. Status - %s.", status)
         print("Successful S3 get_object response for artist details. Status - {}.".format(status))
         artist_details_df = read_csv(artist_details_obj.get("Body"), artist_details_headerList)
+        print(set(artist_summary_df.PK))
         print('Fixing dtypes of artist details')
         convert_dtype2_string(artist_details_df)
         print('Fixed dtypes of artist details.')
@@ -175,6 +177,7 @@ if __name__ == '__main__':
                               + artist_details_df.payee_no
 
     artist_master_df = pd.merge(artist_summary_df, artist_details_df, how='inner', on='joinkey')
+    print(artist_master_df.head())
 
     add_primarykey(artist_master_df)
     print(artist_master_df.head())
