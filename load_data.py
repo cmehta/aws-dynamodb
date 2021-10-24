@@ -66,11 +66,11 @@ def fix_float_2_decimal(df):
 
 def add_primarykey(artist_master_df):
     print(artist_master_df.head())
-    artist_master_df['pk'] = artist_master_df['roysys'] + artist_master_df['vendor_no'] + artist_master_df['acct_no'] +\
-                             artist_master_df['acct_qtr'] +artist_master_df['dsp_name'] +artist_master_df['title'] + \
+    artist_master_df['pk'] = artist_master_df['roysys_x'] + artist_master_df['vendor_no_x'] + artist_master_df['acct_no_x'] +\
+                             artist_master_df['acct_qtr_x'] +artist_master_df['dsp_name'] +artist_master_df['title'] + \
                              artist_master_df['source'] + artist_master_df['sales_type']
-    artist_master_df['sk'] = artist_master_df['roysys'] + artist_master_df['vendor_no'] + artist_master_df['acct_no']+ \
-                             artist_master_df['acct_qtr'] + artist_master_df['dsp_name'] + artist_master_df['title'] + \
+    artist_master_df['sk'] = artist_master_df['roysys_x'] + artist_master_df['vendor_no_x'] + artist_master_df['acct_no_x']+ \
+                             artist_master_df['acct_qtr_x'] + artist_master_df['dsp_name'] + artist_master_df['title'] + \
                              artist_master_df['source'] + artist_master_df['sales_type'] + \
                              artist_master_df['artistdetailid']
 
