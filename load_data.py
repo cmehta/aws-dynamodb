@@ -143,7 +143,7 @@ if __name__ == '__main__':
                                  'eff_rate', 'tax_rate', 'net_roy_earn', 'active', 'asl', 'dsp_name', 'units',
                                  'receipts']
 
-    artist_summary_obj, status = read_4m_s3('artist_summary.csv')
+    artist_summary_obj, status = read_4m_s3('artist_summary_selective.csv')
     if status == 200:
         # logger.info("Successful S3 get_object response for artist summary. Status - %s.", status)
         print("Successful S3 get_object response for artist summary. Status - {}.".format(status))
@@ -155,7 +155,7 @@ if __name__ == '__main__':
         # logger.info("Unsuccessful S3 get_object response for artist summary. Status - %s.", status)
         print("Unsuccessful S3 get_object response for artist summary. Status - {}.".format(status))
 
-    artist_details_obj, status = read_4m_s3('artist_details.csv')
+    artist_details_obj, status = read_4m_s3('artist_details_selective.csv')
     if status == 200:
         # logger.info("Successful S3 get_object response for artist details. Status - %s.", status)
         print("Successful S3 get_object response for artist details. Status - {}.".format(status))
