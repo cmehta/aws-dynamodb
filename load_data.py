@@ -9,7 +9,7 @@ from botocore.exceptions import ClientError
 
 
 REGION_NAME = 'us-east-1'
-DYNAMO_TABLE = 'poc-artist'
+DYNAMO_TABLE = 'poc-strat5'
 AWS_S3_BUCKET = 'database-poc-extracts-east1'
 logger = logging.getLogger(__name__)
 
@@ -65,7 +65,6 @@ def fix_float_2_decimal(df):
 
 
 def add_primarykey(artist_master_df):
-    print(artist_master_df.head())
     # Adding partition key
     artist_master_df['pk'] = artist_master_df['roysys_x'] + artist_master_df['vendor_no_x'] + artist_master_df['acct_no_x'] +\
                              artist_master_df['acct_qtr_x'] +artist_master_df['dsp_name'] +artist_master_df['title'] + \
@@ -162,9 +161,7 @@ if __name__ == '__main__':
                                  'receipts']
 
     artist_summary_df = read_data('artist_summary.csv', artist_summary_headerList)
-    print(artist_summary_df.head())
     artist_details_df = read_data('artist_details.csv', artist_details_headerList)
-    print(artist_details_df.head())
 
     artist_summary_df['joinkey'] = artist_summary_df.roysys + artist_summary_df.acct_no + artist_summary_df.acct_qtr\
                               + artist_summary_df.payee_no
@@ -172,7 +169,6 @@ if __name__ == '__main__':
                               + artist_details_df.payee_no
 
     artist_master_df = pd.merge(artist_summary_df, artist_details_df, how='inner', on='joinkey')
-    print(artist_master_df.head())
 
     add_primarykey(artist_master_df)
     print(artist_master_df.head())
