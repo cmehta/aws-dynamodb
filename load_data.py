@@ -66,13 +66,30 @@ def fix_float_2_decimal(df):
 
 def add_primarykey(artist_master_df):
     print(artist_master_df.head())
+    # Adding partition key
     artist_master_df['pk'] = artist_master_df['roysys_x'] + artist_master_df['vendor_no_x'] + artist_master_df['acct_no_x'] +\
                              artist_master_df['acct_qtr_x'] +artist_master_df['dsp_name'] +artist_master_df['title'] + \
                              artist_master_df['source'] + artist_master_df['sales_type']
+    # Adding sort key
     artist_master_df['sk'] = artist_master_df['roysys_x'] + artist_master_df['vendor_no_x'] + artist_master_df['acct_no_x']+ \
                              artist_master_df['acct_qtr_x'] + artist_master_df['dsp_name'] + artist_master_df['title'] + \
                              artist_master_df['source'] + artist_master_df['sales_type'] + \
                              artist_master_df['artistdetailid']
+
+
+def read_data(file, file_header):
+    obj, status = read_4m_s3(file)
+    if status == 200:
+        # logger.info("Successful S3 get_object response for artist summary. Status - %s.", status)
+        print("Successful S3 get_object response for {}. Status - {}.".format(file, status))
+        df = read_csv(obj.get("Body"), file_header)
+        print('Fixing dtypes of {}'.format(file))
+        convert_dtype2_string(df)
+        print('Fixed dtypes of {}.'.format(file))
+    else:
+        # logger.info("Unsuccessful S3 get_object response for artist summary. Status - %s.", status)
+        print("Unsuccessful S3 get_object response for {}. Status - {}.".format(file, status))
+    return df
 
 
 def batch_load_dynamo(dataframe):
@@ -129,7 +146,6 @@ def batch_load_dynamo(dataframe):
 
 
 if __name__ == '__main__':
-    #remove PK after testing.
     artist_summary_headerList = ['artistsummaryid', 'roysys', 'acct_no', 'acct_qtr', 'seq_no', 'payee_no', 'owner_name',
                                  'account_name', 'vendor_no', 'acct_status', 'acct_payee_status', 'payee_status',
                                  'opening_bal', 'prior_resv', 'total_resv', 'total_payments', 'total_adjustments',
@@ -138,38 +154,17 @@ if __name__ == '__main__':
                                  'a_dom_earnings', 'a_club_earnings', 'a_3rd_party_earnings', 'a_foreign_earnings',
                                  'payee_name', 'address_1', 'address_2', 'address_3', 'address_4', 'payee_pct',
                                  'a_total_earn', 'active', 'asl', 'nonaccrued', 'total_miscearnings',
-                                 'a_total_miscearnings', 'isarchived', 'PK']
+                                 'a_total_miscearnings', 'isarchived']
     artist_details_headerList = ['artistdetailid', 'roysys', 'acct_no', 'acct_qtr', 'seq_no', 'payee_no', 'vendor_no',
                                  'group_no', 'source', 'title', 'sales_type', 'price_level', 'sales_date', 'selection',
                                  'config', 'contract', 'pr_code', 'price', 'pckg_rate', 'roy_rate', 'part_pct',
                                  'eff_rate', 'tax_rate', 'net_roy_earn', 'active', 'asl', 'dsp_name', 'units',
-                                 'receipts', 'PK']
+                                 'receipts']
 
-    artist_summary_obj, status = read_4m_s3('artist_summary_selective.csv')
-    if status == 200:
-        # logger.info("Successful S3 get_object response for artist summary. Status - %s.", status)
-        print("Successful S3 get_object response for artist summary. Status - {}.".format(status))
-        artist_summary_df = read_csv(artist_summary_obj.get("Body"), artist_summary_headerList)
-        print(set(artist_summary_df.PK))
-        print('Fixing dtypes of artist summary')
-        convert_dtype2_string(artist_summary_df)
-        print('Fixed dtypes of artist summary.')
-    else:
-        # logger.info("Unsuccessful S3 get_object response for artist summary. Status - %s.", status)
-        print("Unsuccessful S3 get_object response for artist summary. Status - {}.".format(status))
-
-    artist_details_obj, status = read_4m_s3('artist_details_selective.csv')
-    if status == 200:
-        # logger.info("Successful S3 get_object response for artist details. Status - %s.", status)
-        print("Successful S3 get_object response for artist details. Status - {}.".format(status))
-        artist_details_df = read_csv(artist_details_obj.get("Body"), artist_details_headerList)
-        print(set(artist_summary_df.PK))
-        print('Fixing dtypes of artist details')
-        convert_dtype2_string(artist_details_df)
-        print('Fixed dtypes of artist details.')
-    else:
-        # logger.info("Unsuccessful S3 get_object response for artist details. Status - %s.", status)
-        print("Unsuccessful S3 get_object response for artist details. Status - {}.".format(status))
+    artist_summary_df = read_data('artist_summary.csv', artist_summary_headerList)
+    print(artist_summary_df.head())
+    artist_details_df = read_data('artist_details.csv', artist_details_headerList)
+    print(artist_details_df.head())
 
     artist_summary_df['joinkey'] = artist_summary_df.roysys + artist_summary_df.acct_no + artist_summary_df.acct_qtr\
                               + artist_summary_df.payee_no
