@@ -128,6 +128,7 @@ def batch_load_dynamo(dataframe):
 
 
 if __name__ == '__main__':
+    #remove PK after testing.
     artist_summary_headerList = ['artistsummaryid', 'roysys', 'acct_no', 'acct_qtr', 'seq_no', 'payee_no', 'owner_name',
                                  'account_name', 'vendor_no', 'acct_status', 'acct_payee_status', 'payee_status',
                                  'opening_bal', 'prior_resv', 'total_resv', 'total_payments', 'total_adjustments',
@@ -136,12 +137,12 @@ if __name__ == '__main__':
                                  'a_dom_earnings', 'a_club_earnings', 'a_3rd_party_earnings', 'a_foreign_earnings',
                                  'payee_name', 'address_1', 'address_2', 'address_3', 'address_4', 'payee_pct',
                                  'a_total_earn', 'active', 'asl', 'nonaccrued', 'total_miscearnings',
-                                 'a_total_miscearnings', 'isarchived']
+                                 'a_total_miscearnings', 'isarchived', 'PK']
     artist_details_headerList = ['artistdetailid', 'roysys', 'acct_no', 'acct_qtr', 'seq_no', 'payee_no', 'vendor_no',
                                  'group_no', 'source', 'title', 'sales_type', 'price_level', 'sales_date', 'selection',
                                  'config', 'contract', 'pr_code', 'price', 'pckg_rate', 'roy_rate', 'part_pct',
                                  'eff_rate', 'tax_rate', 'net_roy_earn', 'active', 'asl', 'dsp_name', 'units',
-                                 'receipts']
+                                 'receipts', 'PK']
 
     artist_summary_obj, status = read_4m_s3('artist_summary_selective.csv')
     if status == 200:
